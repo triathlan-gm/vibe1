@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>簡單小遊戲 - p5.js</title>
+    <!-- 引入 p5.js 函式庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+</head>
+<body>
+<script>
+// 繪圖區域大小
+let canvasW = 400;
+let canvasH = 400;
+
+// 玩家圓形的屬性
+let playerX, playerY, playerR;
+
+// 分數
+let score = 0;
+
+// 目標圓形的屬性
+let targetX, targetY, targetR;
+
+// 設定遊戲初始化
+function setup() {
+    createCanvas(canvasW, canvasH);
+    // 玩家初始位置在畫面中央
+    playerR = 20;
+    playerX = width / 2;
+    playerY = height / 2;
+    // 目標圓形初始設定
+    targetR = 15;
+    spawnTarget();
+}
+
+// 產生新的目標圓形位置
+function spawnTarget() {
+    targetX = random(targetR, width - targetR);
+    targetY = random(targetR, height - targetR);
+}
+
+// 每一幀的繪製
+function draw() {
+    background(220);
+
+    // 顯示分數
+    fill(0);
+    textSize(20);
+    text('分數: ' + score, 10, 30);
+
+    // 畫出玩家圓形
+    fill(0, 102, 204);
+    ellipse(playerX, playerY, playerR * 2);
+
+    // 畫出目標圓形
+    fill(255, 0, 0);
+    ellipse(targetX, targetY, targetR * 2);
+
+    // 玩家移動（使用鍵盤方向鍵）
+    if (keyIsDown(LEFT_ARROW)) {
+        playerX -= 4;
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+        playerX += 4;
+    }
+    if (keyIsDown(UP_ARROW)) {
+        playerY -= 4;
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+        playerY += 4;
+    }
+
+    // 限制玩家不超出畫面
+    playerX = constrain(playerX, playerR, width - playerR);
+    playerY = constrain(playerY, playerR, height - playerR);
+
+    // 檢查是否碰到目標
+    let d = dist(playerX, playerY, targetX, targetY);
+    if (d < playerR + targetR) {
+        score += 1; // 分數加一
+        spawnTarget(); // 產生新目標
+    }
+}
+</script>
+</body>
+</html>
